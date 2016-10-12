@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>IBR</title>
+    <link href="Eco/css/bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" href="Eco/css/animate.css">
+    <link rel="stylesheet" href="Eco/css/font-awesome.min.css">
+    <link rel="stylesheet" href="Eco/css/eco.css">
+    <link rel="stylesheet" href="Eco/css/jquery-alert.css">
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery.validate.min.js"></script>
+    <script src="js/spinner.min.js"></script>
+    <script src="js/jquery-alert.js"></script>
+    <script src="js/custom.js"></script>
+</head>
+<body>
+<div id="overlay" style="display: none"></div>
+<div class="pre-loader">
+    <div class="load-con">
+        <div class="spinner">
+            <div class="bounce1"></div>
+            <div class="bounce2"></div>
+            <div class="bounce3"></div>
+        </div>
+    </div>
+</div>
+<div class="ui-loader ui-corner-all ui-body-b ui-loader-verbose" id="loader" style="display: none">
+    <span class="ui-icon-loading"></span>
+</div>
+<div class="ui-loader ui-corner-all ui-body-b ui-loader-verbose" id="msg" style="display: none">
+    <span class="message"></span>
+</div>
+<header>
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" id='logout' class="navbar-toggle" onclick="clearStorage()" style="display: none">
+                    <span class="fa fa-power-off fa-lg"></span>
+                </button>
+                <a class="navbar-brand" href="javascript:void(0)">
+                    <img src="img/logo.png" alt="" class="logo">
+                </a>
+            </div>
+        </div>
+        <!-- /.container-->
+    </nav>
+    <!--RevSlider-->
+    <div class="tp-banner-container">
+        <div class="tp-banner">
+
+        </div>
+    </div>
+</header>
+<div class="">
+    <div data-role="page" id="page1" role="main" class="page container">
+
+        <form class="form-horizontal" role="form" id="loginForm">
+            <div id="error" class="alert alert-danger fade in" style="display: none"></div>
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="username">User Name</label>
+
+                <div class="col-md-4">
+                    <div class="input-icon">
+                        <i class="icon-envelope"></i>
+                        <input id="username" class="form-control" name="username" type="text" autocomplete="off"
+                               placeholder="User Name" required>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="psw">Password</label>
+
+                <div class="col-md-4">
+                    <div class="input-icon right">
+                        <i class="icon-user"></i>
+                        <input id="psw" class="form-control" name='password' type="password" placeholder="Password">
+                    </div>
+
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <button class="btn green" type="submit" id="login">Sign in</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+    <div data-role="page" id="tickets" class="page container hide" data-quicklinks="true">
+
+        <div class="ibr_navbar">
+            <ul class="list-inline">
+                <li class="badge" id="ticket"><a href="javascript:void(0)"
+                                                 onclick="get_open_tickets(localStorage.token)">Open Calls</a></li>
+                <li class="badge" id="plans"><a href="javascript:void(0)" onclick="get_open_ap()">Action plans</a></li>
+                <!--<li class="badge" id="reports"><a href="javascript:void(0)" onclick="get_open_reports()">FE Reports</a>
+                </li>    -->
+            </ul>
+        </div>
+        <ul style="padding: 0 !important;" id="ticket-list-view"></ul>
+        <div id="detail_page"></div>
+        <div class="" id="reportForm" style="display: none">
+            <form action="" id="FEForm" method="post">
+                <div data-theme="a" data-role="header">
+                    <h3>
+                        FE Report
+                    </h3>
+                </div>
+                <div data-role="content">
+                    <input name="ticketId" id="ticket-id" value="" type="hidden">
+                    <input name="companyId" id="company" value="" type="hidden">
+
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="ticket-disabled">Ticket</label>
+
+                        <div class="col-md-4">
+                            <div class="input-icon">
+                                <i class="icon-envelope"></i>
+                                <input name="ticketName" id="ticket-disabled" class="form-control" type="text">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="ap-disabled">Action Plan</label>
+
+                        <div class="col-md-4">
+                            <div class="input-icon">
+                                <i class="icon-envelope"></i>
+                                <input name="actionPlanId" id="ap-disabled" class="form-control" type="text">
+                                <input name="apId" id="ap-id" value="" type="hidden">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="ww-disabled">Work Window</label>
+
+                        <div class="col-md-4">
+                            <div class="input-icon">
+                                <i class="icon-envelope"></i>
+                                <input name="workWindow" id="ww-disabled" class="form-control" type="text">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="timeStart">Start Time</label>
+
+                        <div class="col-md-4">
+                            <div class="input-icon">
+                                <i class="icon-envelope"></i>
+                                <input name="timeStart" id="timeStart" class="form-control" type="time">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="timeFinished">End Time</label>
+
+                        <div class="col-md-4">
+                            <div class="input-icon">
+                                <i class="icon-envelope"></i>
+                                <input name="timeFinished" id="timeFinished" class="form-control" type="time">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="ap-disabled"> Travel Time(hr)</label>
+							<div id="hr">
+                                <div class="input-group" style="width:150px;">
+
+                                    <div class="spinner-buttons input-group-btn">
+                                        <button type="button" class="btn spinner-down red">
+                                            <i class="icon-minus">-</i>
+                                        </button>
+                                    </div>
+                                    <input id="travel-time-hr" name="travel-time-hr" type="text" class="spinner-input form-control" maxlength="3" style="width:50px;" readonly>
+                                    <div class="spinner-buttons input-group-btn">
+                                        <button type="button" class="btn spinner-up blue">
+                                            <i class="icon-plus">+</i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                    </div>
+                    
+
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="ap-disabled"> Travel Time(minutes)</label>
+
+                        <div id="minutes">
+                            <div class="input-group" style="width:150px;">
+                                <div class="spinner-buttons input-group-btn">
+                                    <button type="button" class="btn spinner-down red">
+                                        <i class="icon-minus">-</i>
+                                    </button>
+                                </div>
+                                <input id="travel-time-minutes" name="travel-time-minutes" type="text" class="spinner-input form-control"  style="width:50px;" readonly>
+
+                                <div class="spinner-buttons input-group-btn">
+                                    <button type="button" class="btn spinner-up blue">
+                                        <i class="icon-plus">+</i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="timeFinished">Miles</label>
+
+                        <div class="col-md-4">
+                            <div class="input-icon">
+                                <i class="icon-envelope"></i>
+                                <input name="miles" id="miles" class="form-control" type="text" placeholder="Miles">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="work-done">Work Done</label>
+
+                        <div class="col-md-4">
+                            <textarea name="work-done" id="work-done" placeholder="Work Description"
+                                  style="text-align: left"  class="form-control">
+                            </textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="timeFinished">Parts</label>
+
+                        <div class="col-md-4">
+                            <div class="ui-block-a" id="parts"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="timeFinished">Location</label>
+
+                        <div class="col-md-4">
+                            <div class="ui-block-c" id="locations"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="timeFinished">Quantity</label>
+
+                        <div class="col-md-4">
+                            <div class="input-icon">
+                                <i class="icon-envelope"></i>
+                                <input name="quantity[0]" id="number-pattern" class="form-control" pattern="[0-9]*"
+                                       type="number" placeholder="Quantity">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <button id="submit" value="Submit" type="submit" name="Submit" class="btn green" onclick="submit_fe_report($('#ap-id').val()); return false">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+</div>
+
+<script>
+    //var HOST = "http://127.0.0.1/tickets";
+    //var HOST = "http://192.168.0.101/tickets";
+    var HOST ="http://supportdesk.services";
+    //display_ajax_loader();
+    //localStorage.clear();
+    if (localStorage.token) {
+        redirect_to_profile_page(localStorage.token);
+    } else {
+        hide_ajax_loader();
+    }
+    $().ready(function () {
+        appMaster.preLoader();
+        // validate signup form on keyup and submit
+        $("#loginForm").validate({
+            rules: {
+                password: {
+                    required: true
+                },
+                username: {
+                    required: true
+                }
+            },
+            messages: {
+                password: {
+                    required: "Please provide a password"
+                },
+                username: "Please enter a valid user name"
+            },
+            submitHandler: function (form) {
+                display_ajax_loader();
+                var username = $("#username").val();
+                var password = $("#psw").val();
+                var formURL = HOST + "/web/api/projectapi/security/token/create.json?_username=" + username + "&_password=" + password;
+                $.ajax({
+                    type: "GET",
+                    url: formURL,
+                    crossDomain: true,
+                    dataType: "json",
+                    success: function (msg) {
+                        if (msg['WSSE']) {
+                            localStorage.token = msg['WSSE'];
+                            redirect_to_profile_page();
+                        } else {
+                            var data = jQuery.parseJSON(msg);
+                            $('#error').show();
+                            $("#error").html(data['error']);
+                            hide_ajax_loader();
+                        }
+                    } ,
+                    error: function () {
+                        hide_ajax_loader();
+                        localStorage.clear();
+                        alert("There is some error.");
+
+                    }
+                });
+                return false;
+            },
+			 error: function () {
+                 hide_ajax_loader();
+                 localStorage.clear();
+                 alert("There is some error to login.");
+
+            }
+        });
+    });
+
+    function redirect_to_profile_page() {
+        get_open_tickets();
+    }
+	
+</script>
+
+</body>
+</html>
